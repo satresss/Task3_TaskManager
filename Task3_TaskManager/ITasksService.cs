@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dapper;
+
 namespace Task3_TaskManager
 {
-    public class TasksService
+    public interface ITasksService
     {
-        private readonly ITasksRepository _repository;
-        public TasksService(ITasksRepository repository)
-        {
-            _repository = repository;
-        }
         public static void SelectAllTasks() { }
         public static void CreateNewTask() { }
         public static void UpdateTask() { }
