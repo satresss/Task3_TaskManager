@@ -8,9 +8,9 @@ namespace Task3_TaskManager
 {
     public interface ITasksService
     {
-        public static void SelectAllTasks() { }
-        public static void CreateNewTask() { }
-        public static void UpdateTask() { }
-        public static void DeleteTask() { }
+        IEnumerable<TaskItem> SelectAllTasks();
+        void CreateNewTask(TaskItem task);
+        void UpdateTask(TaskItem task);
+        void DeleteTask(int taskId);
     }
 }

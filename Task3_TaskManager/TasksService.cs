@@ -6,16 +6,28 @@ using System.Threading.Tasks;
 using Dapper;
 namespace Task3_TaskManager
 {
-    public class TasksService
+    public class TasksService : ITasksService
     {
         private readonly ITasksRepository _repository;
         public TasksService(ITasksRepository repository)
         {
             _repository = repository;
         }
-        public static void SelectAllTasks() { }
-        public static void CreateNewTask() { }
-        public static void UpdateTask() { }
-        public static void DeleteTask() { }
+        public void SelectAllTasks() {
+            return _repository.GetAllTasks();
+        }
+        public void CreateNewTask(Task task)
+        {
+            task.CreatedAt = DateTime.Now;
+            _repository.AddTask(TaskItem);
+        }
+        public void UpdateTask(Task task)
+        {
+            _repository.UpdateTask(TaskItem);
+        }
+        public void DeleteTask(int taskId)
+        {
+            _repository.DeleteTask(taskId);
+        }
     }
 }

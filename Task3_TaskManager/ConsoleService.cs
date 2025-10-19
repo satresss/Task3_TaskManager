@@ -5,30 +5,102 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Task3_TaskManager
 {
-    public class ConsoleService
+    public class ConsoleService : IConsoleService
     {
         private readonly ITasksService _tasksService;
-        public ConsoleService(ITasksService tasksService) { 
-            _tasksService = tasksService; 
+
+        public ConsoleService(ITasksService tasksService)
+        {
+            _tasksService = tasksService;
         }
-        public static void CommandEnter() {
-            while (true) {
-                Console.WriteLine("Выберите действие \n1-Просмотр всех задач\n2-Добавление новой задачи\n3-Обновить задачу\n4-Удаление задачи");
-                bool result = int.TryParse(Console.ReadLine(), out int choise);
-                if (!result) {
-                    Console.WriteLine("Ошибка ввода, попробуйте ещё раз");
-                    continue;
-                }
-                switch (choise) {
-                    case 1: { TasksService.SelectAllTasks(); break; }
-                    case 2: { continue; break; }
-                    case 3: { continue; break; }
-                    case 4: { continue; break; }
-                    default: { Console.WriteLine("Ошибка выбора, попробуйте ещё раз"); break; }
-                }
+
+        public void CommandEnter()
+        {
+            while (true)
+            {
+                ShowMenu();
+                int choice = ReadChoice();
+
+                if (!ExecuteChoice(choice))
+                    break;
             }
         }
 
+        private void ShowMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Выберите действие:");
+            Console.WriteLine("1 - Просмотр всех задач");
+            Console.WriteLine("2 - Добавление новой задачи");
+            Console.WriteLine("3 - Обновить задачу");
+            Console.WriteLine("4 - Удаление задачи");
+            Console.WriteLine("5 - Выход");
+        }
 
+        private int ReadChoice()
+        {
+            while (true)
+            {
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out int choice))
+                    return choice;
+
+                Console.WriteLine("Ошибка ввода, введите число от 1 до 5.");
+            }
+        }
+
+        private bool ExecuteChoice(int choice)
+        {
+            switch (choice)
+            {
+                case 1:
+                    var tasks = _tasksService.SelectAllTasks();
+                    foreach (var t in tasks)
+                    {
+                        Console.WriteLine($"{t.Id}. {t.Title} - {(t.IsCompleted ? "Выполнено" : "Не выполнено")} ({t.CreatedAt})");
+                    }
+                    break;
+
+                case 2:
+                    var newTask = new TaskItem
+                    {
+                        Title = ReadString("Введите заголовок задачи: "),
+                        Description = ReadString("Введите описание задачи: "),
+                        IsCompleted = false
+                    };
+                    _tasksService.CreateNewTask(newTask);
+                    Console.WriteLine("Задача добавлена.");
+                    break;
+
+                case 3:
+                    int updateId = ReadInt("Введите Id задачи для обновления: ");
+                    var updateTask = new TaskItem
+                    {
+                        Id = updateId,
+                        Title = ReadString("Введите новый заголовок: "),
+                        Description = ReadString("Введите новое описание: "),
+                        IsCompleted = ReadBool("Выполнено? (y/n): ")
+                    };
+                    _tasksService.UpdateTask(updateTask);
+                    Console.WriteLine("Задача обновлена.");
+                    break;
+
+                case 4:
+                    int deleteId = ReadInt("Введите Id задачи для удаления: ");
+                    _tasksService.DeleteTask(deleteId);
+                    Console.WriteLine("Задача удалена.");
+                    break;
+
+                case 5:
+                    Console.WriteLine("Выход из программы...");
+                    return false;
+
+                default:
+                    Console.WriteLine("Ошибка выбора, попробуйте ещё раз");
+                    break;
+            }
+            return true;
+        }
     }
 }
+
