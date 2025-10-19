@@ -101,6 +101,35 @@ namespace Task3_TaskManager
             }
             return true;
         }
+        private string ReadString(string message)
+        {
+            Console.Write(message);
+            return Console.ReadLine() ?? "";
+        }
+
+        private int ReadInt(string message)
+        {
+            while (true)
+            {
+                Console.Write(message);
+                if (int.TryParse(Console.ReadLine(), out int value))
+                    return value;
+                Console.WriteLine("Ошибка ввода, введите число.");
+            }
+        }
+
+        private bool ReadBool(string message)
+        {
+            while (true)
+            {
+                Console.Write(message);
+                var input = Console.ReadLine()?.ToLower();
+                if (input == "y") return true;
+                if (input == "n") return false;
+                Console.WriteLine("Ошибка ввода, введите y или n.");
+            }
+        }
+
     }
 }
 

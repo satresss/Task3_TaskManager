@@ -13,17 +13,17 @@ namespace Task3_TaskManager
         {
             _repository = repository;
         }
-        public void SelectAllTasks() {
+        public IEnumerable<TaskItem> SelectAllTasks() {
             return _repository.GetAllTasks();
         }
-        public void CreateNewTask(Task task)
+        public void CreateNewTask(TaskItem task)
         {
             task.CreatedAt = DateTime.Now;
-            _repository.AddTask(TaskItem);
+            _repository.AddTask(task);
         }
-        public void UpdateTask(Task task)
+        public void UpdateTask(TaskItem task)
         {
-            _repository.UpdateTask(TaskItem);
+            _repository.UpdateTask(task);
         }
         public void DeleteTask(int taskId)
         {

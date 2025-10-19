@@ -19,7 +19,7 @@ namespace Task3_TaskManager
 
         public IEnumerable<TaskItem> GetAllTasks()
         {
-            return _connection.Query<   >("SELECT * FROM Tasks");
+            return _connection.Query<TaskItem>("SELECT * FROM Tasks");
         }
 
         public void AddTask(TaskItem task)
