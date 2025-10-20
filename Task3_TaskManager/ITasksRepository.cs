@@ -10,7 +10,7 @@ namespace Task3_TaskManager
     {
         IEnumerable<TaskItem> GetAllTasks();
         void AddTask(TaskItem task);
-        void UpdateTask(TaskItem task);
+        void UpdateTask(int taskId);
         void DeleteTask(int taskId);
     }
 }

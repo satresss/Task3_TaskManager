@@ -28,13 +28,18 @@ namespace Task3_TaskManager
             _connection.Execute(sql, task);
         }
 
-        public void UpdateTask(TaskItem task)
+        public void UpdateTask(int taskId)
         {
             string sql = @"UPDATE Tasks 
-                       SET Title = @Title, Description = @Description, IsCompleted = @IsCompleted 
-                       WHERE Id = @Id";
-            _connection.Execute(sql, task);
+                   SET IsCompleted = CASE 
+                                        WHEN IsCompleted = 1 THEN 0 
+                                        ELSE 1 
+                                     END
+                   WHERE Id = @Id";
+
+            _connection.Execute(sql, new { Id = taskId });
         }
+
 
         public void DeleteTask(int taskId)
         {

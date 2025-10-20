@@ -57,7 +57,7 @@ namespace Task3_TaskManager
                     var tasks = _tasksService.SelectAllTasks();
                     foreach (var t in tasks)
                     {
-                        Console.WriteLine($"{t.Id}. {t.Title} - {(t.IsCompleted ? "Выполнено" : "Не выполнено")} ({t.CreatedAt})");
+                        Console.WriteLine($"Id.{t.Id} {t.Title} - {(t.IsCompleted ? "Выполнено" : "Не выполнено")} ({t.CreatedAt}\n{t.Description}");
                     }
                     break;
 
@@ -74,14 +74,7 @@ namespace Task3_TaskManager
 
                 case 3:
                     int updateId = ReadInt("Введите Id задачи для обновления: ");
-                    var updateTask = new TaskItem
-                    {
-                        Id = updateId,
-                        Title = ReadString("Введите новый заголовок: "),
-                        Description = ReadString("Введите новое описание: "),
-                        IsCompleted = ReadBool("Выполнено? (y/n): ")
-                    };
-                    _tasksService.UpdateTask(updateTask);
+                    _tasksService.UpdateTask(updateId);
                     Console.WriteLine("Задача обновлена.");
                     break;
 
@@ -115,18 +108,6 @@ namespace Task3_TaskManager
                 if (int.TryParse(Console.ReadLine(), out int value))
                     return value;
                 Console.WriteLine("Ошибка ввода, введите число.");
-            }
-        }
-
-        private bool ReadBool(string message)
-        {
-            while (true)
-            {
-                Console.Write(message);
-                var input = Console.ReadLine()?.ToLower();
-                if (input == "y") return true;
-                if (input == "n") return false;
-                Console.WriteLine("Ошибка ввода, введите y или n.");
             }
         }
 

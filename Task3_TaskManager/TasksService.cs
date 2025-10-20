@@ -21,9 +21,9 @@ namespace Task3_TaskManager
             task.CreatedAt = DateTime.Now;
             _repository.AddTask(task);
         }
-        public void UpdateTask(TaskItem task)
+        public void UpdateTask(int taskId)
         {
-            _repository.UpdateTask(task);
+            _repository.UpdateTask(taskId);
         }
         public void DeleteTask(int taskId)
         {
