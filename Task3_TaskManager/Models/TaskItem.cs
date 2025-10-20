@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task3_TaskManager
+namespace Task3_TaskManager.Models
 {
     public class TaskItem
     {

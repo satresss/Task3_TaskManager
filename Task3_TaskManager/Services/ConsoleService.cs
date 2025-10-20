@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-namespace Task3_TaskManager
+using Task3_TaskManager.Interfaces;
+using Task3_TaskManager.Models;
+
+namespace Task3_TaskManager.Services
 {
     public class ConsoleService : IConsoleService
     {
@@ -14,14 +15,14 @@ namespace Task3_TaskManager
             _tasksService = tasksService;
         }
 
-        public void CommandEnter()
+        public async Task CommandEnterAsync()
         {
             while (true)
             {
                 ShowMenu();
                 int choice = ReadChoice();
 
-                if (!ExecuteChoice(choice))
+                if (!await ExecuteChoiceAsync(choice))
                     break;
             }
         }
@@ -49,15 +50,15 @@ namespace Task3_TaskManager
             }
         }
 
-        private bool ExecuteChoice(int choice)
+        private async Task<bool> ExecuteChoiceAsync(int choice)
         {
             switch (choice)
             {
                 case 1:
-                    var tasks = _tasksService.SelectAllTasks();
+                    var tasks = await _tasksService.SelectAllTasksAsync();
                     foreach (var t in tasks)
                     {
-                        Console.WriteLine($"Id.{t.Id} {t.Title} - {(t.IsCompleted ? "Выполнено" : "Не выполнено")} ({t.CreatedAt}\n{t.Description}");
+                        Console.WriteLine($"Id.{t.Id} {t.Title} - {(t.IsCompleted ? "Выполнено" : "Не выполнено")} ({t.CreatedAt})\n{t.Description}");
                     }
                     break;
 
@@ -68,19 +69,19 @@ namespace Task3_TaskManager
                         Description = ReadString("Введите описание задачи: "),
                         IsCompleted = false
                     };
-                    _tasksService.CreateNewTask(newTask);
+                    await _tasksService.CreateNewTaskAsync(newTask);
                     Console.WriteLine("Задача добавлена.");
                     break;
 
                 case 3:
                     int updateId = ReadInt("Введите Id задачи для обновления: ");
-                    _tasksService.UpdateTask(updateId);
+                    await _tasksService.UpdateTaskAsync(updateId);
                     Console.WriteLine("Задача обновлена.");
                     break;
 
                 case 4:
                     int deleteId = ReadInt("Введите Id задачи для удаления: ");
-                    _tasksService.DeleteTask(deleteId);
+                    await _tasksService.DeleteTaskAsync(deleteId);
                     Console.WriteLine("Задача удалена.");
                     break;
 
@@ -94,10 +95,17 @@ namespace Task3_TaskManager
             }
             return true;
         }
+
         private string ReadString(string message)
         {
-            Console.Write(message);
-            return Console.ReadLine() ?? "";
+            while (true)
+            {
+                Console.Write(message);
+                string input = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(input))
+                    return input;
+                Console.WriteLine("Значение не может быть пустым!");
+            }
         }
 
         private int ReadInt(string message)
@@ -110,7 +118,5 @@ namespace Task3_TaskManager
                 Console.WriteLine("Ошибка ввода, введите число.");
             }
         }
-
     }
 }
-
